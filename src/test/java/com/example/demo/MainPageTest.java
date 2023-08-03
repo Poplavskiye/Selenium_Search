@@ -11,9 +11,12 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.time.Duration;
+import java.util.List;
+
 
 public class MainPageTest {
     private WebDriver driver;
+
 
     @BeforeEach
     public void setUp() {
@@ -25,6 +28,7 @@ public class MainPageTest {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get("https://www.bing.com/");
 
+
     }
 
     @AfterEach
@@ -35,12 +39,19 @@ public class MainPageTest {
     @Test
     public void search() {
         String input = "Selenium";
+        String expectedResult = "https://www.selenium.dev/";
         WebElement searchField = driver.findElement(By.cssSelector("#sb_form_q"));
         searchField.sendKeys(input);
         searchField.submit();
 
-        WebElement searchPageField = driver.findElement(By.cssSelector("#sb_form_q"));
-        assertEquals(input, searchPageField.getAttribute("value"));
+        List<WebElement> results = driver.findElements(By.cssSelector("h2 > a[href]"));
+        clickElement(results, 0);
+        String url = driver.getCurrentUrl();
+        assertEquals(expectedResult, url, "Wrong website");;
     }
-}
+    public void clickElement(List<WebElement> results, int num)  {
+        results.get(num).click();
+
+        }
+    }
 
