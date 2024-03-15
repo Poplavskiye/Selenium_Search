@@ -1,5 +1,7 @@
-package com.example.demo;
+package test;
 
+import pages.ResultPage;
+import pages.SearchPage;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,7 +16,7 @@ import java.time.Duration;
 import java.util.List;
 
 
-public class MainPageTest {
+public class BingSearchTest {
     private WebDriver driver;
 
 
@@ -37,21 +39,23 @@ public class MainPageTest {
     }
 
     @Test
-    public void search() {
+    public void searchResultsByListTest() {
+        ResultPage resultPage = new ResultPage(driver);
         String input = "Selenium";
-        String expectedResult = "https://www.selenium.dev/";
-        WebElement searchField = driver.findElement(By.cssSelector("#sb_form_q"));
-        searchField.sendKeys(input);
-        searchField.submit();
 
-        List<WebElement> results = driver.findElements(By.cssSelector("h2 > a[href]"));
-        clickElement(results, 0);
-        String url = driver.getCurrentUrl();
-        assertEquals(expectedResult, url, "Wrong website");;
-    }
-    public void clickElement(List<WebElement> results, int num)  {
-        results.get(num).click();
+        resultPage.sendKeys(input);
+        resultPage.clickElement( 0);
 
-        }
+        WebElement searchPagefield = driver.findElement(By.cssSelector("#sb_form_q"));
+        assertEquals(input, searchPagefield.getAttribute("value"));
     }
+    @Test
+            public void searchFieldTest() {
+        ResultPage resultPage = new ResultPage(driver);
+        SearchPage searchPage = new SearchPage(driver);
+        String input = "Selenium";
+        searchPage.sendKeys(input);
+        assertEquals("https://www.selenium.dev/",driver.getCurrentUrl(),"Wrong website");
+    }
+}
 
